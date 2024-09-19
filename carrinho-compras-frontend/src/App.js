@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { AuthProvider } from './context/AuthContext';
-import ProdutoLista from './components/ProdutoLista';
+import ProdutoLista from './components/lista-produtos/ProdutoLista';
 import LoginModal from './components/LoginModal';
-import CarrinhoCompras from './components/CarrinhoCompras';
+import CarrinhoCompras from './components/carrinho/CarrinhoCompras';
+import './App.css'
 
 const App = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -12,8 +13,7 @@ const App = () => {
     <AuthProvider>
       <div>
         <header>
-          <button onClick={() => setIsModalOpen(true)}>Login</button>
-          <button onClick={() => setViewCart(!viewCart)}>Carrinho</button>
+          <button className='button' onClick={() => setViewCart(!viewCart)}>{viewCart? 'Produtos' : 'Carrinho'}</button>
         </header>
         {viewCart ? <CarrinhoCompras /> : <ProdutoLista />}
         <LoginModal isOpen={isModalOpen} onRequestClose={() => setIsModalOpen(false)} />

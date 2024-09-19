@@ -13,6 +13,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,6 +45,7 @@ public class CarrinhoCompraController {
 	@Autowired
 	private TokenService tokenService;
 
+	@CrossOrigin(origins = "*", allowedHeaders = "*")
 	@GetMapping("/ativo")
 	public ResponseEntity<CarrinhoCompra> obterCarrinhoCompra(HttpServletRequest request) {
 		String usuario = extrairUsuarioLogin(request);
@@ -51,6 +53,7 @@ public class CarrinhoCompraController {
 		return CarrinhoCompra.map(ResponseEntity::ok).orElseGet(() -> notFound().build());
 	}
 
+	@CrossOrigin(origins = "*", allowedHeaders = "*")
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deletarCarrinhoCompra(@PathVariable Long id) {
 		if (!service.existsById(id)) {
@@ -60,6 +63,7 @@ public class CarrinhoCompraController {
 		return noContent().build();
 	}
 
+	@CrossOrigin(origins = "*", allowedHeaders = "*")
 	@PostMapping("/produtos/{produtoId}")
 	public ResponseEntity<CarrinhoCompra> adicionarProdutoCarrinhoCompra( @PathVariable Long produtoId, @RequestParam int quantidade, HttpServletRequest request) {
 		Produto produto = produtoRepository.findById(produtoId).orElse(null);
@@ -69,7 +73,8 @@ public class CarrinhoCompraController {
 		return status(CREATED).body(salvo);
 	}
 
-	@DeleteMapping("/produtos/{produtoId}")
+	@CrossOrigin(origins = "*", allowedHeaders = "*")
+	@PostMapping("/produtos/retirar/{produtoId}")
 	public ResponseEntity<CarrinhoCompra> removerProdutoCarrinhoCompra(@PathVariable Long produtoId, @RequestParam int quantidade, HttpServletRequest request) {
 		Produto produto = produtoRepository.findById(produtoId).orElse(null);
 		checkArgument(nonNull(produto), "Produto não encontrado");
@@ -78,6 +83,7 @@ public class CarrinhoCompraController {
 		return status(OK).body(carrinho);
 	}
 	
+	@CrossOrigin(origins = "*", allowedHeaders = "*")
 	@PutMapping
 	public ResponseEntity<CarrinhoCompra> finalizarCarrinho(@RequestBody CarrinhoCompra carrinhoCompra) {
 		checkArgument(ATIVO.equals(carrinhoCompra.getStatus()), "Carrinho precisa estar ativo para finalização");

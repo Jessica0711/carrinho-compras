@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal';
-import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import { api } from '../provider';
 
 Modal.setAppElement('#root');
 
@@ -12,7 +12,7 @@ const LoginModal = ({ isOpen, onRequestClose }) => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('http://localhost:8080/login', { username, password });
+      const response = await api.post('/login', { username, password });
       login(response.data.token);
       onRequestClose();
     } catch (error) {

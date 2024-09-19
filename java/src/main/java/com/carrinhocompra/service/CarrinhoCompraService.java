@@ -29,7 +29,7 @@ public class CarrinhoCompraService {
 
 	@Transactional(rollbackFor = Exception.class)
 	public CarrinhoCompra adicionarProdutoCarrinho(Produto produto, int quantidade, String usuario) {
-		CarrinhoCompra carrinhoCompra = findByAtivoAndUsuarioId(usuario).orElseGet(null);
+		CarrinhoCompra carrinhoCompra = findByAtivoAndUsuarioId(usuario).orElse(null);
 		if (isNull(carrinhoCompra)) {
 			carrinhoCompra = new CarrinhoCompra(usuario, new ArrayList<>(), ATIVO, ZERO);
 		}
@@ -47,8 +47,7 @@ public class CarrinhoCompraService {
 		} else {
 			atualizarProduto(produto, quantidade, carrinhoCompra);
 		}
-		carrinhoCompra.setValorTotal(calcularValorTotal(carrinhoCompra));
-		return repository.save(carrinhoCompra);
+		return salvarOrExcluirCarrinho(carrinhoCompra);
 	}
 
 	@Transactional(readOnly = true)
@@ -71,6 +70,15 @@ public class CarrinhoCompraService {
 		carrinho.setStatus(FINALIZADO);
 		//montar pedido de compra e enviar para pagamento
 		return repository.save(carrinho);
+	}
+	
+	private CarrinhoCompra salvarOrExcluirCarrinho(CarrinhoCompra carrinhoCompra) {
+		if (carrinhoCompra.getProdutos().isEmpty()) {
+			repository.deleteById(carrinhoCompra.getId());
+			return null;
+		}
+		carrinhoCompra.setValorTotal(calcularValorTotal(carrinhoCompra));
+		return repository.save(carrinhoCompra);
 	}
 
 	private void addProdutoCarrinho(Produto produto, int quantidade, CarrinhoCompra carrinhoCompra) {
