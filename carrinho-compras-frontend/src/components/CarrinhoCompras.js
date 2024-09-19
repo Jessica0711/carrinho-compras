@@ -1,23 +1,40 @@
-import React from 'react';
-import { useCart } from '../context/carrinhoContext';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { useAuth } from '../context/AuthContext';
 
-const CarrrinhoCompras = () => {
-    const { cart, removeFromCart } = useCart();
+const CarrinhoCompras = () => {
+  const [cartItems, setCartItems] = useState([]);
+  const [total, setTotal] = useState(0);
+  const { token } = useAuth();
 
-    return (
-        <div>
-            <h1>Carrinho de Compras</h1>
-            <ul>
-                {cart.map(item => (
-                    <li key={item.id}>
-                        {item.name} - ${item.price}
-                        <button onClick={() => removeFromCart(item.id)}>Remover</button>
-                    </li>
-                ))}
-            </ul>
-            <h2>Total: ${cart.reduce((total, item) => total + item.price, 0)}</h2>
+  useEffect(() => {
+    const fetchCart = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/carrinho-compras/ativo', {
+          headers: { Authorization: token ? `Bearer ${token}` : undefined },
+        });
+        setCartItems(response.data.produtos);
+        setTotal(response.data.valorTotal);
+      } catch (error) {
+        console.error("Erro ao buscar o carrinho", error);
+      }
+    };
+
+    fetchCart();
+  }, [token]);
+
+  return (
+    <div>
+      <h2>Carrinho</h2>
+      {cartItems.map(item => (
+        <div key={item.id}>
+          <h3>{item.nome}</h3>
+          <p>Subtotal: R${item.subtotal}</p>
         </div>
-    );
+      ))}
+      <h3>Total: R${total}</h3>
+    </div>
+  );
 };
 
-export default CarrrinhoCompras;
+export default CarrinhoCompras;
