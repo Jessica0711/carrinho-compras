@@ -28,6 +28,4 @@ public class Produto extends AbstractPersistable<Long> {
 	@Digits(fraction = 2, integer = 13)
 	private BigDecimal preco;
 	
-	private String urlImagem;
-	
 }

@@ -57,14 +57,9 @@ public class ProdutoController {
     }
 
     @PostMapping
-    public ResponseEntity<Produto> criarProduto(@RequestBody @Valid Produto produto, @RequestParam("imagem") MultipartFile imagem) {
-    	try {
-            salvarImagem(produto, imagem);
+    public ResponseEntity<Produto> criarProduto(@RequestBody @Valid Produto produto) {
             Produto produtoSalvo = produtoRepository.save(produto);
             return status(CREATED).body(produtoSalvo);
-        } catch (IOException e) {
-            return status(INTERNAL_SERVER_ERROR).build();
-        }
     }
     
     @PutMapping("/{id}")
@@ -85,11 +80,5 @@ public class ProdutoController {
         return noContent().build();
     }
     
-    private void salvarImagem(Produto produto, MultipartFile imagem) throws IOException {
-		String nomeImagem = imagem.getOriginalFilename();
-		Path caminhoDestino = Paths.get(caminhoImagens + nomeImagem);
-		copy(imagem.getInputStream(), caminhoDestino, REPLACE_EXISTING);
-		produto.setUrlImagem("/api/produtos/imagens/" + nomeImagem);
-	}
 }
 

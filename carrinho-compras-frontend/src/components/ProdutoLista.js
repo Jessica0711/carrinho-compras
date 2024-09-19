@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useCart } from '../context/carrinhoContext';
-import styles from './ProdutoLista.module.css';
+import './ProdutoLista.css';
 
 const ProdutoLista = () => {
     const [produtos, setProducts] = useState([]);
@@ -29,20 +29,25 @@ const ProdutoLista = () => {
 
     return (
         <div>
-            <h1 className={styles.title}>Lista de Produtos</h1>
+            <h1 className="title">Lista de Produtos</h1>
+            <div className='container'>
             {produtos.map(produto => (
-                <div key={produto.id}>
+                <div key={produto.id} className="card">
                     <h2>{produto.nome}</h2>
                     <p>Preço: R${produto.preco}</p>
+                    <label for="quantity">Quantidade:</label>
                     <input
+                        className='quantidade'
                         type="number"
                         value={quantidade}
                         min="1"
+                        step="1"
                         onChange={(e) => setQuantidade(e.target.value)}
                     />
-                    <button onClick={handleEnviar(produto)}>Adicionar ao carrinho</button>
+                    <button onClick={handleEnviar(produto)} className="add">Adicionar ao carrinho</button>
                 </div>
             ))}
+            </div>
         </div>
     );
 };

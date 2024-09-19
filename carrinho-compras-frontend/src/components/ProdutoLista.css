@@ -1,0 +1,29 @@
+.title {
+    color: purple;
+}
+
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.quantidade {
+    width: 50px;
+}
+
+.card{
+    border: 2px solid #9345ec;
+    border-radius: 15px; 
+    padding: 20px; 
+    text-align: center;
+    flex: 1 1 200px;
+}
+
+.add {
+    border-radius: 10px;
+    background-color: #FBFBF8;
+    border-color: green;
+    border-width: 1px;
+    color: green;
+}
